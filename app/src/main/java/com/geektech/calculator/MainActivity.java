@@ -2,6 +2,7 @@ package com.geektech.calculator;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -13,16 +14,27 @@ public class MainActivity extends AppCompatActivity {
     private Integer firstValue, secondValue;
     private String operation;
     private boolean gh = false;
+    private Button btn_next;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         tvResult = findViewById(R.id.tv_result);
+        btn_next = findViewById(R.id.btn_next);
+        btn_next.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(MainActivity.this, SecondActivity.class);
+                intent.putExtra("key", tvResult.getText().toString());
+                startActivity(intent);
+            }
+        });
 
     }
 
     public void onNumberClick(View view) {
+        btn_next.setVisibility(View.INVISIBLE);
         if (gh){
             tvResult.setText("0");
             gh = false;
@@ -105,6 +117,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void onOperationClick(View view) {
+        btn_next.setVisibility(View.INVISIBLE);
         switch (view.getId()){
             case R.id.btn_plus:
                 firstValue = Integer.parseInt(tvResult.getText().toString());
@@ -128,6 +141,7 @@ public class MainActivity extends AppCompatActivity {
                 break;
 
             case R.id.btn_equal:
+                btn_next.setVisibility(View.VISIBLE);
                 gh = true;
                 secondValue = Integer.parseInt(tvResult.getText().toString()
                         .replace(firstValue + operation,""));
